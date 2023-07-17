@@ -40,7 +40,7 @@ extension for the end users:
 |`"insert"` | `id: string`                  | insert new data                                     |
 |`"update"` | `id: string`                  | update the existing row                             |
 | `"exist"` | `exist: boolean`              | returns true or false if select query has some rows |
-| `"delete"` | ``                            |  delete some rows from database                     |
+| `"delete"` | `id: string`                  |  delete some rows from database                     |
 
 The commands have the same request parameters:
 

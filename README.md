@@ -54,7 +54,7 @@ Reply parameters:
 | `rows`                    | `key_value.KeyValue[]` | The `rows` parameter has a sub parameter which matches the file name. |
 | `rows.$.<file name.json>` | `string` | The content of the file fetched from IPFS |                               |
 
-The `rows` reply parameters length is same as `tables` request
+The `fields` reply parameters length is same as `tables` request
 parameter.
 Each element in the `rows` has one element which
 matches the fields name.
@@ -69,7 +69,6 @@ Request Parameters:
 
 | Name        | Type       | Description                                                                                    |
 |-------------|------------|------------------------------------------------------------------------------------------------|
-| `tables`    | `string[]` | The tables should have only one element which is the `CID`                                     |
 | `fields`    | `string[]` | The fields should have only one element which is the file name. Example: `testnet.json`        |
 | `arguments` | `any[]`    | The arguments should have only one element which is the string content. Example: `hello world` |
 

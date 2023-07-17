@@ -1,16 +1,16 @@
-module github.com/Seascape-Foundation/w3storage-seascape-extension
+module github.com/ahmetson/w3storage-extension
 
 go 1.19
 
-replace github.com/Seascape-Foundation/sds-service-lib => D:/sds/service-lib
+replace github.com/ahmetson/service-lib => D:/sds/service-lib
 
-replace github.com/Seascape-Foundation/sds-common-lib => D:/sds/common-lib
+replace github.com/ahmetson/common-lib => D:/sds/common-lib
 
 require (
 	github.com/Azure/go-ansiterm v0.0.0-20230124172434-306776ec8161 // indirect
 	github.com/Microsoft/go-winio v0.6.0 // indirect
-	github.com/Seascape-Foundation/sds-common-lib v0.0.0-20230706114026-ffdae7101871
-	github.com/Seascape-Foundation/sds-service-lib v0.0.0-20230707141352-080b6bc89ddf
+	github.com/ahmetson/common-lib v0.0.0-20230717140750-5e95e61d69c2
+	github.com/ahmetson/service-lib v0.0.0-20230707141352-080b6bc89ddf
 	github.com/cenkalti/backoff/v4 v4.2.0 // indirect
 	github.com/charmbracelet/lipgloss v0.6.0 // indirect
 	github.com/charmbracelet/log v0.1.2 // indirect
@@ -76,11 +76,16 @@ require (
 	github.com/go-sql-driver/mysql v1.7.0
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/joho/godotenv v1.4.0 // indirect
-	github.com/pebbe/zmq4 v1.2.9
+	github.com/pebbe/zmq4 v1.2.9 // indirect
 	golang.org/x/crypto v0.1.0 // indirect
 	golang.org/x/sys v0.7.0 // indirect
 	golang.org/x/text v0.9.0 // indirect
 	google.golang.org/protobuf v1.30.0 // indirect
+)
+
+require (
+	github.com/ipfs/go-cid v0.3.2
+	github.com/web3-storage/go-w3s-client v0.0.7
 )
 
 require (
@@ -97,7 +102,6 @@ require (
 	github.com/ipfs/go-bitfield v1.0.0 // indirect
 	github.com/ipfs/go-block-format v0.0.3 // indirect
 	github.com/ipfs/go-blockservice v0.4.0 // indirect
-	github.com/ipfs/go-cid v0.3.2 // indirect
 	github.com/ipfs/go-datastore v0.6.0 // indirect
 	github.com/ipfs/go-fetcher v1.6.1 // indirect
 	github.com/ipfs/go-ipfs-blockstore v1.2.0 // indirect
@@ -149,7 +153,6 @@ require (
 	github.com/spacemonkeygo/spacelog v0.0.0-20180420211403-2296661a0572 // indirect
 	github.com/spaolacci/murmur3 v1.1.0 // indirect
 	github.com/tomnomnom/linkheader v0.0.0-20180905144013-02ca5825eb80 // indirect
-	github.com/web3-storage/go-w3s-client v0.0.7 // indirect
 	github.com/whyrusleeping/cbor v0.0.0-20171005072247-63513f603b11 // indirect
 	github.com/whyrusleeping/cbor-gen v0.0.0-20220514204315-f29c37e9c44c // indirect
 	github.com/whyrusleeping/chunker v0.0.0-20181014151217-fe64bd25879f // indirect
