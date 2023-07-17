@@ -22,7 +22,7 @@ func main() {
 	logger.Info("App configuration loaded successfully")
 
 	if len(appConfig.Services) == 0 {
-		logger.Fatal("missing service configuration in seascape.yml")
+		logger.Fatal("missing service configuration in service.yml")
 	}
 
 	apiToken := appConfig.GetString("W3_STORAGE_API_TOKEN")
