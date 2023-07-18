@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/ahmetson/w3storage-extension/handler"
+	handler "github.com/ahmetson/service-lib/extension/database"
 	"github.com/stretchr/testify/suite"
 	"github.com/testcontainers/testcontainers-go/modules/mysql"
 )
@@ -68,8 +68,6 @@ func (suite *TestControllerSuite) SetupTest() {
 		}
 	}
 	suite.Require().NotEmpty(exposedPort)
-	DatabaseConfigurations.Parameters["SDS_DATABASE_PORT"] = exposedPort
-	DatabaseConfigurations.Parameters["SDS_DATABASE_NAME"] = suite.dbName
 
 	//go Run(app_config, logger)
 	// wait for initiation of the controller
@@ -96,18 +94,18 @@ func (suite *TestControllerSuite) TestInsert() {
 	suite.T().Log("test INSERT command")
 	// query
 	arguments := []interface{}{"test_id", `[{}]`}
-	request := handler.DatabaseQueryRequest{
+	request := handler.QueryRequest{
 		Fields:    []string{"abi_id", "body"},
 		Tables:    []string{"storage_abi"},
 		Arguments: arguments,
 	}
 	var reply handler.InsertReply
-	err := handler.INSERT.Request(suite.client, request, &reply)
+	err := handler.Insert.Request(suite.client, request, &reply)
 	suite.Require().NoError(err)
 
 	// query
 	arguments = []interface{}{"test_id"}
-	request = handler.DatabaseQueryRequest{
+	request = handler.QueryRequest{
 		Fields:    []string{"abi_id"},
 		Tables:    []string{"storage_abi"},
 		Where:     "abi_id = ?",
@@ -120,7 +118,7 @@ func (suite *TestControllerSuite) TestInsert() {
 
 	suite.T().Log("test SELECT ALL command")
 	// query
-	request = handler.DatabaseQueryRequest{
+	request = handler.QueryRequest{
 		Fields: []string{"abi_id", "body"},
 		Tables: []string{"storage_abi"},
 	}

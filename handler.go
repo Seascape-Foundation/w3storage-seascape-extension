@@ -14,7 +14,6 @@ import (
 	databaseExtension "github.com/ahmetson/service-lib/extension/database"
 	"github.com/ahmetson/service-lib/log"
 	"github.com/ahmetson/service-lib/remote"
-	"github.com/ahmetson/w3storage-extension/handler"
 	"github.com/ipfs/go-cid"
 	"github.com/web3-storage/go-w3s-client"
 	"io/fs"
@@ -178,7 +177,7 @@ var onSelectAll = func(request message.Request, _ log.Logger, _ remote.Clients) 
 		rows[i] = kv
 	}
 
-	reply := handler.SelectAllReply{
+	reply := databaseExtension.SelectAllReply{
 		Rows: rows,
 	}
 	replyMessage, err := command.Reply(&reply)
@@ -221,7 +220,7 @@ var onExist = func(request message.Request, _ log.Logger, _ remote.Clients) mess
 		return message.Fail("failed to get file content from storage: " + err.Error())
 	}
 
-	reply := handler.ExistReply{}
+	reply := databaseExtension.ExistReply{}
 	reply.Exist = false
 	if len(content) > 0 {
 		reply.Exist = true
@@ -263,7 +262,7 @@ var onSelectRow = func(request message.Request, _ log.Logger, clients remote.Cli
 		return message.Fail("failed to read data of file " + storage.FileName + " in " + storage.Cid.String() + " cid. error: " + err.Error())
 	}
 
-	reply := handler.SelectRowReply{
+	reply := databaseExtension.SelectRowReply{
 		Outputs: kv,
 	}
 	replyMessage, err := command.Reply(&reply)
