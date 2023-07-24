@@ -45,15 +45,16 @@ func main() {
 	}
 
 	service.AddController(configuration.ReplierType)
-	// web proxy is set for the testing purpose
 	const webProxyUrl = "github.com/ahmetson/web-proxy"
-	//const organizationProxyUrl = "github.com/ahmetson/organization-proxy"
+	const organizationProxyUrl = "github.com/ahmetson/organization-proxy"
+
+	// web proxy is set for the testing purpose to access from web
+	service.RequireProxy(webProxyUrl, configuration.DefaultContext)
 	// organization proxy is set to connect from other services
-	service.RequireProxy(webProxyUrl)
-	//service.RequireProxy(organizationProxyUrl)
+	service.RequireProxy(organizationProxyUrl, configuration.DevContext)
 
 	service.Pipe(webProxyUrl, service.GetControllerName())
-	//service.Pipe(organizationProxyUrl, service.GetControllerName())
+	service.Pipe(organizationProxyUrl, service.GetControllerName())
 
 	///////////////////////////////////////////////////////////////////////
 	//
