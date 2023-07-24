@@ -1,19 +1,34 @@
 # W3Storage Extension
 
-**W3Storage Extension** allows services
-to store the data on 
-[IPFS](https://ipfs.tech) and 
-[Filecoin](https://filecoin.io).
+**W3Storage Extension** enables your app's content storage on 
+[IPFS](https://ipfs.tech) and [Filecoin](https://filecoin.io).
 
-This extension is of the [database](./DATABASE.md) 
-type of service. This means,
-**w3storage extension** is compatible with
-other storages. 
+It's the wrapper of [https://web3.storage/](https://web3.storage/)
 
+> **For curious people**
+> 
+> This extension is of the [database](./DATABASE.md) type of service. 
+> This means, **w3storage extension** is compatible with other storages.
+> 
 > Refer to the [database](./DATABASE.md) service reference for
 > type of commands that this extension should implement.
 
-## Implementation of `database` extension
+# Requirements
+Requires `W3_STORAGE_API_TOKEN` environment variable.
+
+To get the storage api token, go to [https://web3.storage/](https://web3.storage/).
+Create an account.
+Follow the official [web3 documentation](https://web3.storage/docs/#get-an-api-token) to get API token.
+
+Create `.env` and add `W3_STORAGE_API_TOKEN`.
+
+# Commands to use
+
+> It's based on the `service-lib/extension/database`.
+> Command names are same for any `database` kind of service.
+> 
+> Here we describe the way how it's interpreted for **w3storage extension**.
+
 Here, we discuss how the `database` extension commands
 are interpreted in **w3storage extension**.
 
