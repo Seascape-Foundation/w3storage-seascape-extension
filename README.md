@@ -13,6 +13,9 @@ It's the wrapper of [https://web3.storage/](https://web3.storage/)
 > Refer to the [database](./DATABASE.md) service reference for
 > type of commands that this extension should implement.
 
+Todo:
+* Use [w3name](https://web3.storage/products/w3name/) instead StaticOrganization.
+
 # Requirements
 Requires `W3_STORAGE_API_TOKEN` environment variable.
 
