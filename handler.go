@@ -16,7 +16,6 @@ import (
 	"github.com/ahmetson/service-lib/remote"
 	"github.com/ipfs/go-cid"
 	"github.com/web3-storage/go-w3s-client"
-	"io/fs"
 	"os"
 )
 
@@ -92,24 +91,32 @@ func read(storage Storage) (key_value.KeyValue, error) {
 //
 // this function depends on the folder
 func write(fileName string, content string) (string, error) {
-	file, err := os.Create(fileName)
+	newFile, err := os.Create(fileName)
 	if err != nil {
 		return "", fmt.Errorf("failed to create a temporary file '%s': %w", fileName, err)
 	}
-	_, err = file.Write([]byte(content))
+	_, err = newFile.Write([]byte(content))
 	if err != nil {
-		_ = file.Close()
+		_ = newFile.Close()
 		return "", fmt.Errorf("failed to write the content into temporary %s: %w", fileName, err)
 	}
-	// Test the putting a new file
+	if err := newFile.Close(); err != nil {
+		return "", fmt.Errorf("failed to close the file")
+	}
 
-	fileCid, err := w3client.Put(context.Background(), fs.File(file))
+	file, err := os.Open(fileName)
+	if err != nil {
+		return "", fmt.Errorf("failed to open a temporary '%s' file: %w", fileName, err)
+	}
+
+	fileCid, err := w3client.Put(context.Background(), file)
 	if err != nil {
 		_ = file.Close()
 		return "", fmt.Errorf("failed to put the file %s into w3storage: %w", fileName, err)
 	}
 
 	_ = file.Close()
+	_ = os.Remove(fileName)
 
 	return fileCid.String(), nil
 }
@@ -144,7 +151,7 @@ func cidMatchesFileNames(queryParameters databaseExtension.QueryRequest, fieldLe
 // intended to be used once during the app launch for caching.
 //
 // Minimize the database queries by using this
-var onSelectAll = func(request message.Request, _ log.Logger, _ remote.Clients) message.Reply {
+var onSelectAll = func(request message.Request, _ *log.Logger, _ ...*remote.ClientSocket) message.Reply {
 	if w3client == nil {
 		return message.Fail("w3client is null")
 	}
@@ -189,7 +196,7 @@ var onSelectAll = func(request message.Request, _ log.Logger, _ remote.Clients) 
 }
 
 // checks whether there are any rows that matches to the query
-var onExist = func(request message.Request, _ log.Logger, _ remote.Clients) message.Reply {
+var onExist = func(request message.Request, _ *log.Logger, _ ...*remote.ClientSocket) message.Reply {
 	if w3client == nil {
 		return message.Fail("w3client is null")
 	}
@@ -236,7 +243,7 @@ var onExist = func(request message.Request, _ log.Logger, _ remote.Clients) mess
 
 // Read the row only once
 // func on_read_one_row(db *sql.DB, query string, parameters []interface{}, outputs []interface{}) ([]interface{}, error) {
-var onSelectRow = func(request message.Request, _ log.Logger, clients remote.Clients) message.Reply {
+var onSelectRow = func(request message.Request, _ *log.Logger, clients ...*remote.ClientSocket) message.Reply {
 	if w3client == nil {
 		return message.Fail("w3client is null")
 	}
@@ -274,7 +281,7 @@ var onSelectRow = func(request message.Request, _ log.Logger, clients remote.Cli
 }
 
 // Execute the deletion
-var onDelete = func(request message.Request, logger log.Logger, _ remote.Clients) message.Reply {
+var onDelete = func(request message.Request, logger *log.Logger, _ ...*remote.ClientSocket) message.Reply {
 	// heavily relying on onExist for the validation.
 	// in case of the file change, then make sure that onDelete has two parameters
 	existReply := onExist(request, logger, nil)
@@ -313,7 +320,7 @@ var onDelete = func(request message.Request, logger log.Logger, _ remote.Clients
 }
 
 // Execute the insert
-var onInsert = func(request message.Request, _ log.Logger, _ remote.Clients) message.Reply {
+var onInsert = func(request message.Request, logger *log.Logger, _ ...*remote.ClientSocket) message.Reply {
 	if w3client == nil {
 		return message.Fail("w3client is null")
 	}
@@ -333,12 +340,14 @@ var onInsert = func(request message.Request, _ log.Logger, _ remote.Clients) mes
 	}
 
 	content, ok := queryParameters.Arguments[0].(string)
+
 	if !ok {
 		return message.Fail("the argument should be a string but it's not")
 	}
 	fileName := queryParameters.Fields[0]
 
 	fileCid, err := write(fileName, content)
+	logger.Info("inserting a new file", "file name", fileName, "content", content, "cid", fileCid)
 	if err != nil {
 		return message.Fail("failed to write on web3storage: " + err.Error())
 	}
@@ -354,7 +363,8 @@ var onInsert = func(request message.Request, _ log.Logger, _ remote.Clients) mes
 	return replyMessage
 }
 
-var onUpdate = func(request message.Request, logger log.Logger, _ remote.Clients) message.Reply {
+// Simply calls onInsert(). Because 'update' is an alias of 'insert'
+var onUpdate = func(request message.Request, logger *log.Logger, _ ...*remote.ClientSocket) message.Reply {
 	reply := onInsert(request, logger, nil)
 	if !reply.IsOK() {
 		return reply
